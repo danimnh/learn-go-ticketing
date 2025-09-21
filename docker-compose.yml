@@ -2,6 +2,7 @@ version: "3.8"
 services:
   postgres:
     image: postgres:15
+    env_file: .env
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -12,6 +13,7 @@ services:
       - "${POSTGRES_PORT}:5432"
 
   mongo:
+    env_file: .env
     image: mongo:6
     volumes:
       - mongodata:/data/db
@@ -19,12 +21,12 @@ services:
       - "${MONGO_PORT}:27017"
 
   redis:
+    env_file: .env
     image: redis:7
     command: ["redis-server", "--appendonly", "yes"]
     ports:
       - "${REDIS_PORT}:6379"
 
-env_file: .env
 
 volumes:
   pgdata:
