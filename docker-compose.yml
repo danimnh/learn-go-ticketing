@@ -1,0 +1,45 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: ticket
+      POSTGRES_PASSWORD: ticketpass
+      POSTGRES_DB: ticketing
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  mongo:
+    image: mongo:6
+    volumes:
+      - mongodata:/data/db
+    ports:
+      - "27017:27017"
+
+  redis:
+    image: redis:7
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+
+  directus:
+    image: directus/directus:latest
+    environment:
+      DIRECTUS_HOST: "0.0.0.0"
+      DIRECTUS_PORT: 8055
+      DB_CLIENT: pg
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: ticketing
+      DB_USER: ticket
+      DB_PASSWORD: ticketpass
+    ports:
+      - "8055:8055"
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:
+  mongodata:
